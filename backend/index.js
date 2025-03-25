@@ -21,9 +21,25 @@ app.post("/register", (req, res) => {
             res.status(500).send(err);
         }
     });
-    res.send("User registered");
+    res.status(200).send("User registered");
 });
 
 app.listen(3000, () => {
     console.log("Server is running on port 3000");
 });
+
+app.post("/login", (req, res) => {
+    const { username, password }= req.body;
+    const dbQuery = `SELECT username,password FROM users WHERE username = ?`;
+    dbpool.run(dbQuery, params, (err) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+    });
+    if (dbQuery.username == username && dbQuery.password == password) {
+        res.status(200).send({"message": "All good!"});
+    }
+    else {
+        res.status(400).send({"message" : "Not good :("});
+    }
+})
