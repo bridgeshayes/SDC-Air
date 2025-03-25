@@ -31,7 +31,7 @@ app.listen(3000, () => {
 app.post("/login", (req, res) => {
     const { username, password }= req.body;
     const dbQuery = `SELECT username,password FROM users WHERE username = ?`;
-    dbpool.run(query, params, (err) => {
+    dbpool.run(dbQuery, params, (err) => {
         if (err) {
             res.status(500).send(err);
         }
