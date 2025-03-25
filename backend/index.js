@@ -1,22 +1,27 @@
 import express from "express";
 import sqlite3 from "sqlite3";
+import bodyParser from "body-parser";
 
-const dbpool = sqlite3.createPool({
-    filename: "./database/airbnb_workshop.db",
-    driver: sqlite3.Database,
-});
+const db = new sqlite3.Database("../database/airbnb_workshop.db");
 
 const app = express();
+
+app.use(bodyParser.json());
 
 app.get("/", (req, res) => {
     res.send("Hello World");
 });
 
 app.post("/register", (req, res) => {
-    const { username, email, password, first_name, last_name, is_host } = req.body;
+    const username = req.body.username;
+    const email = req.body.email;
+    const password = req.body.password;
+    const first_name = req.body.first_name;
+    const last_name = req.body.last_name;
+    const is_host = req.body.is_host;
     const query = `INSERT INTO users (username, email, password, first_name, last_name, is_host) VALUES (?, ?, ?, ?, ?, ?)`;
     const params = [username, email, password, first_name, last_name, is_host];
-    dbpool.run(query, params, (err) => {
+    db.run(query, params, (err) => {
         if (err) {
             res.status(500).send(err);
         }
@@ -31,7 +36,7 @@ app.listen(3000, () => {
 app.post("/login", (req, res) => {
     const { username, password }= req.body;
     const dbQuery = `SELECT username,password FROM users WHERE username = ?`;
-    dbpool.run(dbQuery, params, (err) => {
+    db.run(dbQuery, params, (err) => {
         if (err) {
             res.status(500).send(err);
         }
