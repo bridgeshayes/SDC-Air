@@ -6,7 +6,7 @@ const baseURL = "http://localhost:3000";
 const loginBtn = document.getElementById("btnLogin");
 const registerBtn = document.getElementById("btnRegister");
 
-loginBtn.addEventListener('click', async (event) => {
+loginBtn.addEventListener('click', () => {
     const username = document.getElementById('txtUsernameLogin').value
     const password = document.getElementById('txtPasswordLogin').value
 
@@ -22,24 +22,46 @@ loginBtn.addEventListener('click', async (event) => {
     {
         console.log("YIPPEE IT SENT, WE GOT A STATUS 200, and EVERYTHING IS OKAY!");
     }
-    
     else if(!responseLogin.ok) 
     {
         throw new Error(`Response Status: ${responseLogin.status}`);
     }
-})
+});
 
-registerBtn.addEventListener('click', async (event) => {
-    const responseRegister = fetch(baseURL + "/register", {
+const checkHost = document.getElementById("checkHost");
+
+registerBtn.addEventListener('click',  () => {
+  // variables  
+  const firstNameInp = document.getElementById("txtFirstName");
+  const lastNameInp = document.getElementById("txtLastName");
+  const usernameInp = document.getElementById("txtUsernameRegister");
+  const emailInp = document.getElementById("txtEmailRegister");
+  const passwordInp = document.getElementById("txtPasswordRegister");
+  const retypePassInp = document.getElementById("txtRetypePassword");
+  let hostCheck;
+
+  if(checkHost.checked)
+  {
+    hostCheck = 1;
+  }
+  else
+  {
+    hostCheck = 0;
+  }
+
+
+
+  console.log(checkHost);
+
+  const responseRegister = fetch(baseURL + "/register", {
         method: "POST",
         body: {
-            username: "",
-            email: "",
-            password: "",
-            first_name: "",
-            last_name: "",
-            is_host: 0,
-    
+            first_name: firstNameInp.value,
+            last_name: lastNameInp.value,
+            username: usernameInp.value,
+            email: emailInp.value,
+            password: passwordInp.value,
+            is_host: hostCheck,
         },
     
     });
